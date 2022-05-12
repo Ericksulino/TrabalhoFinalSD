@@ -9,28 +9,21 @@ def StrToInt(txt):
     lista = list(map(int, stlist))
     return lista
 
-def getLinha(matriz, n):
-    return [i for i in matriz[n]]  
-
-def getColuna(matriz, n):
-    return [i[n] for i in matriz]
-
-
-def multiMatriz(mat1,mat2):
-    mat1lin = len(mat1)                               
-    mat2col = len(mat1[0])            
-    matRes = []                        
-    for i in range(mat1lin):           
-        matRes.append([])
-
-        for j in range(mat2col):
-            # multiplica cada linha de mat1 por cada coluna de mat2;
-            listMult = [x*y for x, y in zip(getLinha(mat1, i), getColuna(mat2, j))]
-
-            # e em seguida adiciona a matRes a soma das multiplicações
-            matRes[i].append(sum(listMult))
-
-    return(matRes)
+def prodMatrix(matrizA, matrizB):
+    """Multiplica duas matrizes."""
+    sizeLA = len(matrizA)
+    sizeCA = len(matrizA[0]) # deve ser igual a sizeLB para ser possível multiplicar as matrizes
+    sizeCB = len(matrizB[0])
+    matrizR = []
+    # Multiplica
+    for i in range(sizeLA):
+        matrizR.append([])
+        for j in range(sizeCB):
+            val = 0
+            for k in range(sizeCA):
+                    val += matrizA[i][k]*matrizB[k][j]
+            matrizR[i].append(val)
+    return matrizR
 
 host = 'localhost'
 port = 8001
@@ -63,7 +56,7 @@ while(running):
         list2 = StrToInt(msg[3])
         matriz1 = list(cria_matriz(list1, n1))
         matriz2 = list(cria_matriz(list2, n2))
-        con.send('Produto das Matrizes: {}\n'.format(multiMatriz(matriz1,matriz2)).encode())
+        con.send('Produto das Matrizes: {}\n'.format(prodMatrix(matriz1,matriz2)).encode())
         #con.send('Matrizes: {}\n{}\n'.format(matriz1,matriz2).encode())
 
 serv_socket.close()
