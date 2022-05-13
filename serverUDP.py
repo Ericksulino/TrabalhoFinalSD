@@ -1,5 +1,6 @@
 import socket
-
+from threading import Thread
+matrFim = []
 def cria_matriz(lst, n):  
     for i in range(0, len(lst), n): 
         yield lst[i:i + n] 
@@ -11,6 +12,7 @@ def StrToInt(txt):
 
 def prodMatrix(matrizA, matrizB):
     """Multiplica duas matrizes."""
+    global matrFim
     sizeLA = len(matrizA)
     sizeCA = len(matrizA[0]) # deve ser igual a sizeLB para ser possível multiplicar as matrizes
     sizeCB = len(matrizB[0])
@@ -23,7 +25,8 @@ def prodMatrix(matrizA, matrizB):
             for k in range(sizeCA):
                     val += matrizA[i][k]*matrizB[k][j]
             matrizR[i].append(val)
-    return matrizR
+    #return matrizR
+    matrFim = matrizR
 
 localIP     = "127.0.0.1"
 
@@ -42,8 +45,6 @@ UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 # Bind to address and ip
 
 UDPServerSocket.bind((localIP, localPort))
-
- 
 
 print("UDP server up and listening")
 
@@ -86,7 +87,9 @@ while(True):
         list2 = StrToInt(mat[3])
         matriz1 = list(cria_matriz(list1, n1))
         matriz2 = list(cria_matriz(list2, n2))
-        msgFromServer       = 'Produto das Matrizes: {}\n'.format(prodMatrix(matriz1,matriz2))
+        t = Thread(target=prodMatrix(matriz1,matriz2))
+        t.start()
+        msgFromServer       = 'Produto das Matrizes: {}\n'.format(matrFim)
         bytesToSend         = str.encode(msgFromServer)
         # Sending a reply to client
         UDPServerSocket.sendto(bytesToSend, address)
