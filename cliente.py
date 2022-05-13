@@ -1,9 +1,10 @@
 import socket
 
-mensagem = ''
-
-while(mensagem != 'sair'):
-    mensagem = input('Digite uma mensagem para enviar ao servidor:')
+mensagem = '2/3/2,3,4,6/1,3,0,2,1,1'
+#mensagem = ''
+for i in range(1):
+#while(mensagem != 'sair'):
+    #mensagem = input('Digite uma mensagem para enviar ao servidor:')
 
     #msgFromClient       = "Hello UDP Server"
 
